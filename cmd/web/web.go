@@ -45,11 +45,13 @@ func V1(appCtx context.Context, log *slog.Logger) {
 	// which won't happen until the app is killed.
 	var wg sync.WaitGroup
 	wg.Go(func() {
+		log.Debug("server accepting new connections")
 		if err := srv.ListenAndServe(); err != nil {
 			if appCtx.Err() != nil {
+				log.Debug("app shutdown, server rejecting new connections")
 				return
 			}
-			log.Error("listen and serve", "error", err)
+			log.Error("server rejecting new connections", "reason", err)
 		}
 	})
 
