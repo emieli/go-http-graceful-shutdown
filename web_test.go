@@ -2,7 +2,6 @@ package web_test
 
 import (
 	"context"
-	"gshut/cmd/web"
 	"io"
 	"log/slog"
 	"net/http"
@@ -11,6 +10,7 @@ import (
 	"sync/atomic"
 	"testing"
 	"time"
+	"web"
 )
 
 const (
