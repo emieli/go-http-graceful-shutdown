@@ -2,8 +2,10 @@ package web
 
 import (
 	"context"
+	"log"
 	"log/slog"
 	"net/http"
+	"os"
 	"sync"
 	"time"
 )
@@ -24,6 +26,23 @@ func SleepHandler(w http.ResponseWriter, r *http.Request) {
 	case <-time.After(duration):
 		// Sleep over, return output to client
 		w.Write([]byte("OK\n"))
+	}
+}
+
+func V0() {
+	router := http.NewServeMux()
+	router.HandleFunc("GET /sleep/{durationSeconds}", SleepHandler)
+
+	srv := http.Server{
+		Addr:         ":5001",
+		Handler:      router,
+		IdleTimeout:  time.Minute,
+		WriteTimeout: time.Minute,
+		ReadTimeout:  10 * time.Second,
+	}
+	if err := srv.ListenAndServe(); err != nil {
+		log.Printf("server shutdown: %v", err)
+		os.Exit(1)
 	}
 }
 
