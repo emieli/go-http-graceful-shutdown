@@ -52,7 +52,7 @@ func TestV1(t *testing.T) {
 
 	// Trigger app shutdown via OS signal
 	time.Sleep(appCloseTimer)
-	logger.Debug("sending OS shutdown signal (SIHGUP)...")
+	logger.Debug("sending OS shutdown signal (SIGHUP)...")
 	cmd := exec.Command("kill", "-1", strconv.Itoa(os.Getpid()))
 	if err := cmd.Run(); err != nil {
 		t.Fatalf("send OS signal: %v", err)
@@ -98,7 +98,7 @@ func TestV2(t *testing.T) {
 
 	// Trigger app shutdown via OS signal
 	time.Sleep(appCloseTimer)
-	logger.Debug("sending OS shutdown signal (SIHGUP)...")
+	logger.Debug("sending OS shutdown signal (SIGHUP)...")
 	cmd := exec.Command("kill", "-1", strconv.Itoa(os.Getpid()))
 	if err := cmd.Run(); err != nil {
 		t.Fatalf("send OS signal: %v", err)
@@ -123,6 +123,7 @@ func requestGenerator(log *slog.Logger, wg *sync.WaitGroup, success, fail *atomi
 
 	for range maxRequests {
 		wg.Go(func() {
+			log.Debug("new request")
 			resp, err := httpClient.Get("http://localhost:5001/sleep/" + sleepDuration)
 			if err != nil {
 				fail.Add(1)
